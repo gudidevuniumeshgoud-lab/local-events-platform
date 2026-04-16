@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat - EventHub</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <h1>🎯 EventHub</h1>
+      </div>
+      <div class="navbar-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="user-dashboard.html" class="nav-link">Dashboard</a>
+        <button id="logoutBtn" class="nav-link btn-danger">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Chat Container -->
+  <section class="chat-section">
+    <div class="container">
+      <div class="chat-container">
+        <!-- Chat List -->
+        <aside class="chat-sidebar">
+          <h3>Messages</h3>
+          <div id="chatList" class="chat-list">
+            <p class="loading">Loading conversations...</p>
+          </div>
+        </aside>
+
+        <!-- Chat Window -->
+        <main class="chat-window">
+          <div id="chatHeader" class="chat-header">
+            <h3>Select a conversation</h3>
+          </div>
+
+          <div id="messagesContainer" class="messages-container">
+            <p class="loading">Select a conversation to start chatting</p>
+          </div>
+
+          <div id="chatInputArea" class="chat-input-area" style="display: none;">
+            <form id="messageForm">
+              <input type="text" id="messageInput" placeholder="Type your message..." required>
+              <select id="messageType">
+                <option value="info">Info</option>
+                <option value="event-request">Event Request</option>
+                <option value="support">Support</option>
+              </select>
+              <button type="submit" class="btn-primary">Send</button>
+            </form>
+          </div>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/chat.js"></script>
+</body>
+</html>

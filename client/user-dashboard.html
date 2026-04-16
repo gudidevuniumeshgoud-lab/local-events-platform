@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard - EventHub</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <h1>🎯 EventHub</h1>
+      </div>
+      <div class="navbar-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="user-dashboard.html" class="nav-link active">Dashboard</a>
+        <a href="chat.html" class="nav-link">Messages</a>
+        <button id="logoutBtn" class="nav-link btn-danger">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Dashboard Container -->
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="user-profile">
+        <img id="userAvatar" src="https://via.placeholder.com/100" alt="Avatar">
+        <h3 id="userName">Loading...</h3>
+        <p id="userEmail">email@example.com</p>
+      </div>
+      <nav class="dashboard-nav">
+        <a href="#overview" class="nav-item active" data-section="overview">Overview</a>
+        <a href="#registered" class="nav-item" data-section="registered">Registered Events</a>
+        <a href="#profile" class="nav-item" data-section="profile">Profile Settings</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-content">
+      <!-- Overview Section -->
+      <section id="overview" class="dashboard-section active">
+        <h2>Welcome Back!</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h4>Events Registered</h4>
+            <p id="registeredCount" class="stat-number">0</p>
+          </div>
+          <div class="stat-card">
+            <h4>Upcoming Events</h4>
+            <p id="upcomingCount" class="stat-number">0</p>
+          </div>
+          <div class="stat-card">
+            <h4>Messages</h4>
+            <p id="messageCount" class="stat-number">0</p>
+          </div>
+        </div>
+
+        <div class="quick-actions">
+          <a href="index.html" class="btn-primary">Browse Events</a>
+          <a href="chat.html" class="btn-secondary">Contact Admin</a>
+        </div>
+      </section>
+
+      <!-- Registered Events Section -->
+      <section id="registered" class="dashboard-section">
+        <h2>Your Registered Events</h2>
+        <div id="registeredEventsList" class="events-list">
+          <p class="loading">Loading your events...</p>
+        </div>
+      </section>
+
+      <!-- Profile Settings Section -->
+      <section id="profile" class="dashboard-section">
+        <h2>Profile Settings</h2>
+        <form id="profileForm" class="profile-form">
+          <div class="form-group">
+            <label for="profileName">Full Name</label>
+            <input type="text" id="profileName" name="name">
+          </div>
+          <div class="form-group">
+            <label for="profilePhone">Phone</label>
+            <input type="tel" id="profilePhone" name="phone">
+          </div>
+          <div class="form-group">
+            <label for="profileLocation">Location</label>
+            <input type="text" id="profileLocation" name="location">
+          </div>
+          <div class="form-group">
+            <label for="profileBio">Bio</label>
+            <textarea id="profileBio" name="bio" rows="4"></textarea>
+          </div>
+          <button type="submit" class="btn-primary">Update Profile</button>
+          <button type="button" id="deleteAccountBtn" class="btn-danger">Delete Account</button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

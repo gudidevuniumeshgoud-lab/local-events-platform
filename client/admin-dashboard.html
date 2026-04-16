@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - EventHub</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <h1>🎯 EventHub Admin</h1>
+      </div>
+      <div class="navbar-menu">
+        <a href="admin-dashboard.html" class="nav-link active">Dashboard</a>
+        <a href="chat.html" class="nav-link">User Messages</a>
+        <button id="logoutBtn" class="nav-link btn-danger">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Admin Dashboard -->
+  <div class="admin-container">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <nav class="admin-nav">
+        <a href="#overview" class="admin-nav-item active" data-section="overview">📊 Overview</a>
+        <a href="#events" class="admin-nav-item" data-section="events">📅 Manage Events</a>
+        <a href="#create" class="admin-nav-item" data-section="create">➕ Create Event</a>
+        <a href="#users" class="admin-nav-item" data-section="users">👥 View Users</a>
+        <a href="#messages" class="admin-nav-item" data-section="messages">💬 Messages</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-content">
+      <!-- Overview Section -->
+      <section id="overview" class="admin-section active">
+        <h2>Dashboard Overview</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h4>Total Events</h4>
+            <p id="totalEvents" class="stat-number">0</p>
+          </div>
+          <div class="stat-card">
+            <h4>Total Users</h4>
+            <p id="totalUsers" class="stat-number">0</p>
+          </div>
+          <div class="stat-card">
+            <h4>Total Registrations</h4>
+            <p id="totalRegistrations" class="stat-number">0</p>
+          </div>
+          <div class="stat-card">
+            <h4>New Messages</h4>
+            <p id="newMessages" class="stat-number">0</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Manage Events Section -->
+      <section id="events" class="admin-section">
+        <h2>Manage Events</h2>
+        <div id="eventsList" class="admin-events-list">
+          <p class="loading">Loading events...</p>
+        </div>
+      </section>
+
+      <!-- Create Event Section -->
+      <section id="create" class="admin-section">
+        <h2>Create New Event</h2>
+        <form id="createEventForm" class="event-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="eventTitle">Event Title</label>
+              <input type="text" id="eventTitle" name="title" required>
+            </div>
+            <div class="form-group">
+              <label for="eventCategory">Category</label>
+              <select id="eventCategory" name="category" required>
+                <option value="">Select Category</option>
+                <option value="hackathon">Hackathon</option>
+                <option value="workshop">Workshop</option>
+                <option value="competition">Competition</option>
+                <option value="conference">Conference</option>
+                <option value="meetup">Meetup</option>
+                <option value="webinar">Webinar</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="eventDescription">Description</label>
+            <textarea id="eventDescription" name="description" rows="4" required></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="eventDate">Date</label>
+              <input type="date" id="eventDate" name="date" required>
+            </div>
+            <div class="form-group">
+              <label for="eventTime">Time</label>
+              <input type="time" id="eventTime" name="time" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="eventLocation">Location</label>
+              <input type="text" id="eventLocation" name="location" required>
+            </div>
+            <div class="form-group">
+              <label for="organizerName">Organizer Name</label>
+              <input type="text" id="organizerName" name="organizerName" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="participationFee">Participation Fee ($)</label>
+              <input type="number" id="participationFee" name="participationFee" min="0" value="0">
+            </div>
+            <div class="form-group">
+              <label for="prizeMoney">Prize Money ($)</label>
+              <input type="number" id="prizeMoney" name="prizeMoney" min="0" value="0">
+            </div>
+            <div class="form-group">
+              <label for="capacity">Capacity</label>
+              <input type="number" id="capacity" name="capacity" min="1" value="100" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="eventImage">Event Image URL</label>
+            <input type="url" id="eventImage" name="image">
+          </div>
+
+          <button type="submit" class="btn-primary">Create Event</button>
+        </form>
+      </section>
+
+      <!-- Users Section -->
+      <section id="users" class="admin-section">
+        <h2>All Users</h2>
+        <div id="usersList" class="admin-users-list">
+          <p class="loading">Loading users...</p>
+        </div>
+      </section>
+
+      <!-- Messages Section -->
+      <section id="messages" class="admin-section">
+        <h2>User Messages</h2>
+        <div id="messagesList" class="admin-messages-list">
+          <p class="loading">Loading messages...</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

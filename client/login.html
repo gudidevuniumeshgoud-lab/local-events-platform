@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - EventHub</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <h1>🎯 EventHub</h1>
+      </div>
+      <div class="navbar-menu">
+        <a href="index.html" class="nav-link">Home</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Login Form -->
+  <section class="auth-section">
+    <div class="auth-container">
+      <div class="auth-form">
+        <h2>Login to EventHub</h2>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+          </div>
+          <button type="submit" class="btn-primary full-width">Login</button>
+        </form>
+        <p class="auth-link">
+          Don't have an account? <a href="register.html">Register here</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/utils.js"></script>
+  <script>
+    const form = document.getElementById('loginForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('http://localhost:5000/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          showToast('Login successful!', 'success');
+          
+          // Redirect based on role
+          const role = data.user.role;
+          setTimeout(() => {
+            if (role === 'admin') {
+              window.location.href = 'admin-dashboard.html';
+            } else {
+              window.location.href = 'user-dashboard.html';
+            }
+          }, 1500);
+        } else {
+          showToast(data.message, 'error');
+        }
+      } catch (error) {
+        showToast('Login failed', 'error');
+      }
+    });
+  </script>
+</body>
+</html>
