@@ -29,14 +29,24 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="user-profile">
-        <img id="userAvatar" src="https://via.placeholder.com/100" alt="Avatar">
+        <div class="user-avatar">👤</div>
         <h3 id="userName">Loading...</h3>
         <p id="userEmail">email@example.com</p>
+        <p id="userRole" style="font-size: 0.8rem; color: #10b981;">User</p>
       </div>
       <nav class="dashboard-nav">
-        <a href="#overview" class="nav-item active" data-section="overview">Overview</a>
-        <a href="#registered" class="nav-item" data-section="registered">Registered Events</a>
-        <a href="#profile" class="nav-item" data-section="profile">Profile Settings</a>
+        <a href="#" class="nav-item active" data-section="overview">
+          <span>📊</span> Overview
+        </a>
+        <a href="#" class="nav-item" data-section="registered">
+          <span>📝</span> My Events
+        </a>
+        <a href="#" class="nav-item" data-section="messages">
+          <span>💬</span> Messages
+        </a>
+        <a href="#" class="nav-item" data-section="profile">
+          <span>⚙️</span> Settings
+        </a>
       </nav>
     </aside>
 
@@ -44,58 +54,98 @@
     <main class="dashboard-content">
       <!-- Overview Section -->
       <section id="overview" class="dashboard-section active">
-        <h2>Welcome Back!</h2>
+        <div class="section-header">
+          <h2>Welcome Back! 👋</h2>
+          <p id="lastLogin">Last active: Just now</p>
+        </div>
+
         <div class="stats-grid">
           <div class="stat-card">
+            <div class="stat-icon">📅</div>
             <h4>Events Registered</h4>
             <p id="registeredCount" class="stat-number">0</p>
           </div>
           <div class="stat-card">
+            <div class="stat-icon">🚀</div>
             <h4>Upcoming Events</h4>
             <p id="upcomingCount" class="stat-number">0</p>
           </div>
           <div class="stat-card">
-            <h4>Messages</h4>
+            <div class="stat-icon">💬</div>
+            <h4>Unread Messages</h4>
             <p id="messageCount" class="stat-number">0</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <h4>Member Since</h4>
+            <p id="memberSince" class="stat-text">2024</p>
           </div>
         </div>
 
         <div class="quick-actions">
-          <a href="index.html" class="btn-primary">Browse Events</a>
-          <a href="chat.html" class="btn-secondary">Contact Admin</a>
+          <a href="index.html" class="btn-primary">
+            <span>🔍</span> Browse Events
+          </a>
+          <a href="chat.html" class="btn-secondary">
+            <span>💬</span> Contact Admin
+          </a>
         </div>
       </section>
 
-      <!-- Registered Events Section -->
+      <!-- My Events Section -->
       <section id="registered" class="dashboard-section">
-        <h2>Your Registered Events</h2>
+        <div class="section-header">
+          <h2>📝 Your Registered Events</h2>
+        </div>
         <div id="registeredEventsList" class="events-list">
           <p class="loading">Loading your events...</p>
         </div>
       </section>
 
+      <!-- Messages Section -->
+      <section id="messages" class="dashboard-section">
+        <div class="section-header">
+          <h2>💬 Messages</h2>
+        </div>
+        <div id="messagesList" class="messages-list">
+          <p class="loading">Loading messages...</p>
+        </div>
+      </section>
+
       <!-- Profile Settings Section -->
       <section id="profile" class="dashboard-section">
-        <h2>Profile Settings</h2>
+        <div class="section-header">
+          <h2>⚙️ Profile Settings</h2>
+        </div>
         <form id="profileForm" class="profile-form">
-          <div class="form-group">
-            <label for="profileName">Full Name</label>
-            <input type="text" id="profileName" name="name">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="profileName">Full Name</label>
+              <input type="text" id="profileName" name="name">
+            </div>
+            <div class="form-group">
+              <label for="profilePhone">Phone</label>
+              <input type="tel" id="profilePhone" name="phone">
+            </div>
           </div>
-          <div class="form-group">
-            <label for="profilePhone">Phone</label>
-            <input type="tel" id="profilePhone" name="phone">
-          </div>
-          <div class="form-group">
-            <label for="profileLocation">Location</label>
-            <input type="text" id="profileLocation" name="location">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="profileLocation">Location</label>
+              <input type="text" id="profileLocation" name="location">
+            </div>
+            <div class="form-group">
+              <label for="profileEmail">Email</label>
+              <input type="email" id="profileEmail" name="email" disabled>
+            </div>
           </div>
           <div class="form-group">
             <label for="profileBio">Bio</label>
-            <textarea id="profileBio" name="bio" rows="4"></textarea>
+            <textarea id="profileBio" name="bio" rows="4" placeholder="Tell us about yourself..."></textarea>
           </div>
-          <button type="submit" class="btn-primary">Update Profile</button>
-          <button type="button" id="deleteAccountBtn" class="btn-danger">Delete Account</button>
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">✓ Save Changes</button>
+            <button type="button" id="deleteAccountBtn" class="btn-danger">🗑️ Delete Account</button>
+          </div>
         </form>
       </section>
     </main>

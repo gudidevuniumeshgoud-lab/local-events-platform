@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "local-events-platform-server",
   "version": "1.0.0",
   "description": "Local Events Discovery Platform Backend",
@@ -14,9 +14,7 @@
     "jsonwebtoken": "^9.0.0",
     "dotenv": "^16.0.3",
     "cors": "^2.8.5",
-    "multer": "^1.4.5-lts.1",
-    "express-async-errors": "^3.1.1",
-    "joi": "^17.9.2"
+    "express-async-errors": "^3.1.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

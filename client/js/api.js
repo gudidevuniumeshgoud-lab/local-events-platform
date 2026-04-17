@@ -1,42 +1,52 @@
-const API_BASE_URL = 'http://localhost:5000/api';
+﻿const API_BASE_URL = 'http://localhost:5000/api';
 
-const getHeaders = () => {
+// Helper function to get auth headers
+function getAuthHeaders() {
   const token = localStorage.getItem('token');
   return {
     'Content-Type': 'application/json',
-    ...(token && { 'Authorization': `Bearer ${token}` }),
+    ...(token && { 'Authorization': `Bearer ${token}` })
   };
-};
+}
 
-// Auth APIs
+// Auth API
 const authAPI = {
   register: async (name, email, password) => {
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify({ name, email, password }),
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ name, email, password })
     });
-    return response.json();
+    return await response.json();
+  },
+  
+  registerAdmin: async (name, email, password, adminCode) => {
+    const response = await fetch(`${API_BASE_URL}/auth/register-admin`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ name, email, password, adminCode })
+    });
+    return await response.json();
   },
 
   login: async (email, password) => {
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify({ email, password }),
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ email, password })
     });
-    return response.json();
+    return await response.json();
   },
 
   getMe: async () => {
     const response = await fetch(`${API_BASE_URL}/auth/me`, {
-      headers: getHeaders(),
+      headers: getAuthHeaders()
     });
-    return response.json();
-  },
+    return await response.json();
+  }
 };
 
-// Event APIs
+// Event API
 const eventAPI = {
   getAllEvents: async (page = 1, limit = 10, category = '', location = '', search = '') => {
     let url = `${API_BASE_URL}/events?page=${page}&limit=${limit}`;
@@ -44,150 +54,140 @@ const eventAPI = {
     if (location) url += `&location=${location}`;
     if (search) url += `&search=${search}`;
 
-    const response = await fetch(url, { headers: getHeaders() });
-    return response.json();
+    const response = await fetch(url, {
+      headers: getAuthHeaders()
+    });
+    return await response.json();
   },
 
   getEventById: async (id) => {
     const response = await fetch(`${API_BASE_URL}/events/${id}`, {
-      headers: getHeaders(),
+      headers: getAuthHeaders()
     });
-    return response.json();
+    return await response.json();
   },
 
   createEvent: async (eventData) => {
     const response = await fetch(`${API_BASE_URL}/events`, {
       method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(eventData),
+      headers: getAuthHeaders(),
+      body: JSON.stringify(eventData)
     });
-    return response.json();
+    return await response.json();
   },
 
   updateEvent: async (id, eventData) => {
     const response = await fetch(`${API_BASE_URL}/events/${id}`, {
       method: 'PUT',
-      headers: getHeaders(),
-      body: JSON.stringify(eventData),
+      headers: getAuthHeaders(),
+      body: JSON.stringify(eventData)
     });
-    return response.json();
+    return await response.json();
   },
 
   deleteEvent: async (id) => {
     const response = await fetch(`${API_BASE_URL}/events/${id}`, {
       method: 'DELETE',
-      headers: getHeaders(),
+      headers: getAuthHeaders()
     });
-    return response.json();
-  },
-
-  getEventsByOrganizer: async () => {
-    const response = await fetch(`${API_BASE_URL}/events/organizer/events`, {
-      headers: getHeaders(),
-    });
-    return response.json();
-  },
+    return await response.json();
+  }
 };
 
-// Registration APIs
+// Registration API
 const registrationAPI = {
   registerEvent: async (eventId) => {
     const response = await fetch(`${API_BASE_URL}/registrations`, {
       method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify({ eventId }),
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ eventId })
     });
-    return response.json();
+    return await response.json();
   },
 
   getRegisteredEvents: async () => {
     const response = await fetch(`${API_BASE_URL}/registrations`, {
-      headers: getHeaders(),
+      headers: getAuthHeaders()
     });
-    return response.json();
+    return await response.json();
   },
 
   cancelRegistration: async (eventId) => {
     const response = await fetch(`${API_BASE_URL}/registrations/${eventId}`, {
       method: 'DELETE',
-      headers: getHeaders(),
+      headers: getAuthHeaders()
     });
-    return response.json();
-  },
-
-  getEventParticipants: async (eventId) => {
-    const response = await fetch(`${API_BASE_URL}/registrations/event/${eventId}/participants`, {
-      headers: getHeaders(),
-    });
-    return response.json();
-  },
+    return await response.json();
+  }
 };
 
-// Message APIs
+// Message API
 const messageAPI = {
-  sendMessage: async (receiverId, content, messageType = 'info') => {
+  sendMessage: async (receiverId, content) => {
     const response = await fetch(`${API_BASE_URL}/messages`, {
       method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify({ receiverId, content, messageType }),
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ receiverId, content })
     });
-    return response.json();
+    return await response.json();
   },
 
   getConversation: async (userId) => {
     const response = await fetch(`${API_BASE_URL}/messages/conversation/${userId}`, {
-      headers: getHeaders(),
+      headers: getAuthHeaders()
     });
-    return response.json();
+    return await response.json();
   },
 
   getMyMessages: async () => {
     const response = await fetch(`${API_BASE_URL}/messages`, {
-      headers: getHeaders(),
+      headers: getAuthHeaders()
     });
-    return response.json();
+    return await response.json();
   },
 
   deleteMessage: async (messageId) => {
     const response = await fetch(`${API_BASE_URL}/messages/${messageId}`, {
       method: 'DELETE',
-      headers: getHeaders(),
+      headers: getAuthHeaders()
     });
-    return response.json();
-  },
+    return await response.json();
+  }
 };
 
-// User APIs
+// User API
 const userAPI = {
   getAllUsers: async (page = 1, limit = 10, role = '') => {
     let url = `${API_BASE_URL}/users?page=${page}&limit=${limit}`;
     if (role) url += `&role=${role}`;
 
-    const response = await fetch(url, { headers: getHeaders() });
-    return response.json();
+    const response = await fetch(url, {
+      headers: getAuthHeaders()
+    });
+    return await response.json();
   },
 
   getUserById: async (id) => {
     const response = await fetch(`${API_BASE_URL}/users/${id}`, {
-      headers: getHeaders(),
+      headers: getAuthHeaders()
     });
-    return response.json();
+    return await response.json();
   },
 
   updateProfile: async (userData) => {
     const response = await fetch(`${API_BASE_URL}/users/profile/update`, {
       method: 'PUT',
-      headers: getHeaders(),
-      body: JSON.stringify(userData),
+      headers: getAuthHeaders(),
+      body: JSON.stringify(userData)
     });
-    return response.json();
+    return await response.json();
   },
 
   deleteAccount: async () => {
     const response = await fetch(`${API_BASE_URL}/users/account/delete`, {
       method: 'DELETE',
-      headers: getHeaders(),
+      headers: getAuthHeaders()
     });
-    return response.json();
-  },
+    return await response.json();
+  }
 };

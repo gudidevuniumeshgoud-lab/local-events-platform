@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+﻿const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema(
   {
@@ -15,11 +15,6 @@ const messageSchema = new mongoose.Schema(
     content: {
       type: String,
       required: [true, 'Message content is required'],
-    },
-    messageType: {
-      type: String,
-      enum: ['event-request', 'support', 'info'],
-      default: 'info',
     },
     isRead: {
       type: Boolean,

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Registration - EventHub</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-brand">
+        <h1>🎯 EventHub Admin</h1>
+      </div>
+      <div class="navbar-menu">
+        <a href="index.html" class="nav-link">Home</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Admin Registration Form -->
+  <section class="auth-section">
+    <div class="auth-container">
+      <div class="auth-form">
+        <h2>🔐 Admin Registration</h2>
+        <p style="text-align: center; color: #6b7280; margin-bottom: 1.5rem;">Create Admin Account</p>
+        
+        <form id="adminRegisterForm">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+          </div>
+          <div class="form-group">
+            <label for="adminCode">Admin Code</label>
+            <input type="password" id="adminCode" name="adminCode" placeholder="Enter admin code" required>
+          </div>
+          <button type="submit" class="btn-primary full-width">Register as Admin</button>
+        </form>
+        
+        <p class="auth-link" style="margin-top: 1.5rem;">
+          Already have an account? <a href="login.html">Login here</a>
+        </p>
+        <p class="auth-link">
+          <a href="register.html">Register as User</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/utils.js"></script>
+  <script>
+    const form = document.getElementById('adminRegisterForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const adminCode = document.getElementById('adminCode').value;
+
+      try {
+        const response = await fetch('http://localhost:5000/api/auth/register-admin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password, adminCode }),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          showToast('Admin account created successfully!', 'success');
+          
+          setTimeout(() => {
+            window.location.href = 'admin-dashboard.html';
+          }, 1500);
+        } else {
+          showToast(data.message || 'Registration failed', 'error');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        showToast('Registration failed', 'error');
+      }
+    });
+  </script>
+</body>
+</html>

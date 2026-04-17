@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+﻿const mongoose = require('mongoose');
 
 const registrationSchema = new mongoose.Schema(
   {
@@ -17,11 +17,6 @@ const registrationSchema = new mongoose.Schema(
       enum: ['registered', 'cancelled', 'attended'],
       default: 'registered',
     },
-    paymentStatus: {
-      type: String,
-      enum: ['pending', 'completed', 'failed'],
-      default: 'pending',
-    },
     registeredAt: {
       type: Date,
       default: Date.now,
@@ -30,7 +25,6 @@ const registrationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Unique registration per user per event
 registrationSchema.index({ userId: 1, eventId: 1 }, { unique: true });
 
 module.exports = mongoose.model('Registration', registrationSchema);

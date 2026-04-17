@@ -1,77 +1,129 @@
-let currentConversationUserId = null;
+﻿let currentConversationUserId = null;
+let currentUserRole = null;
 
 async function loadChat() {
-  if (!requireAuth()) return;
-
-  const urlParams = new URLSearchParams(window.location.search);
-  currentConversationUserId = urlParams.get('userId');
-
-  if (!currentConversationUserId) {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    if (user.role === 'admin') {
-      loadChatList();
-    } else {
-      loadAdminList();
-    }
-  } else {
-    loadConversation(currentConversationUserId);
+  console.log('🔄 Loading chat...');
+  
+  if (!requireAuth()) {
+    console.log('❌ Not authenticated');
+    return;
   }
 
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  currentUserRole = user.role;
+
+  console.log('👤 Current user:', user.email, 'Role:', user.role);
+  
+  loadContactsList();
   setupMessageForm();
-}
-
-async function loadChatList() {
-  try {
-    const data = await userAPI.getAllUsers(1, 1000);
-    if (data.success) {
-      displayChatList(data.users.filter((u) => u.role === 'user'));
+  
+  setInterval(() => {
+    if (currentConversationUserId) {
+      loadConversation(currentConversationUserId);
     }
-  } catch (error) {
-    console.error('Error loading chat list:', error);
-  }
+  }, 2000);
 }
 
-async function loadAdminList() {
+async function loadContactsList() {
   try {
-    const data = await userAPI.getAllUsers(1, 1000);
-    if (data.success) {
-      const admins = data.users.filter((u) => u.role === 'admin');
-      if (admins.length > 0) {
-        displayChatList(admins);
-        selectConversation(admins[0]._id, admins[0].name);
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    
+    console.log('🔐 Token exists:', !!token);
+    console.log('👤 User role:', user.role);
+
+    let url = 'http://localhost:5000/api/users?page=1&limit=100';
+    
+    if (user.role === 'admin') {
+      console.log('👨‍💼 Admin user - fetching regular users');
+      url += '&role=user';
+    } else {
+      console.log('👤 Regular user - fetching admins');
+      url += '&role=admin';
+    }
+
+    console.log('📡 Fetching from:', url);
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       }
+    });
+
+    console.log('📨 Response status:', response.status);
+
+    const data = await response.json();
+    console.log('📦 Response data:', data);
+
+    if (data.success && data.users && data.users.length > 0) {
+      console.log('✅ Contacts found:', data.users.length);
+      displayContactsList(data.users);
+    } else {
+      console.warn('⚠️ No contacts found');
+      displayContactsList([]);
     }
   } catch (error) {
-    console.error('Error loading admin list:', error);
+    console.error('❌ Error loading contacts:', error);
+    displayContactsList([]);
   }
 }
 
-function displayChatList(users) {
+function displayContactsList(contacts) {
   const chatList = document.getElementById('chatList');
-  chatList.innerHTML = users
-    .map(
-      (user) => `
-    <div class="chat-item" onclick="selectConversation('${user._id}', '${user.name}')">
-      <div style="cursor: pointer; padding: 1rem; background: white; border-radius: 0.5rem;">
-        <p style="font-weight: 600;">${user.name}</p>
-        <p style="font-size: 0.85rem; color: #6b7280;">${user.email}</p>
+
+  console.log('🎨 Displaying contacts:', contacts.length);
+
+  if (!contacts || contacts.length === 0) {
+    chatList.innerHTML = '<p class="loading" style="padding: 1rem; color: #6b7280; text-align: center;">No contacts available</p>';
+    return;
+  }
+
+  const html = contacts.map(contact => {
+    console.log('Adding contact:', contact.name);
+    return `
+      <div class="chat-user" onclick="selectConversation('${contact._id}', '${contact.name}', '${contact.email}')">
+        <div class="chat-user-name">${contact.name}</div>
+        <div class="chat-user-email">${contact.email}</div>
       </div>
-    </div>
-  `
-    )
-    .join('');
+    `;
+  }).join('');
+
+  chatList.innerHTML = html;
+  console.log('✅ Contacts displayed');
 }
 
-function selectConversation(userId, userName) {
+function selectConversation(userId, userName, userEmail) {
+  console.log('💬 Selected conversation:', userName);
+  
   currentConversationUserId = userId;
-  document.getElementById('chatHeader').innerHTML = `<h3>💬 Chat with ${userName}</h3>`;
+  
+  document.querySelectorAll('.chat-user').forEach(el => el.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  document.getElementById('chatHeader').innerHTML = `
+    <h3>💬 ${userName}</h3>
+    <small>${userEmail}</small>
+  `;
+
   document.getElementById('chatInputArea').style.display = 'block';
+
   loadConversation(userId);
 }
 
 async function loadConversation(userId) {
   try {
-    const data = await messageAPI.getConversation(userId);
+    const token = localStorage.getItem('token');
+    
+    const response = await fetch(`http://localhost:5000/api/messages/conversation/${userId}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const data = await response.json();
+
     if (data.success) {
       displayMessages(data.messages);
     }
@@ -84,27 +136,35 @@ function displayMessages(messages) {
   const container = document.getElementById('messagesContainer');
   const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
 
-  if (messages.length === 0) {
-    container.innerHTML = '<p class="loading">No messages yet. Start a conversation!</p>';
+  if (!messages || messages.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">📧</div>
+        <p>No messages yet. Start the conversation!</p>
+      </div>
+    `;
     return;
   }
 
-  container.innerHTML = messages
-    .map(
-      (msg) => `
-    <div class="message ${msg.senderId._id === currentUser.id ? 'sent' : 'received'}">
-      <div class="message-content">
-        <strong>${msg.senderId.name}</strong>
-        <p>${msg.content}</p>
-        <small>${formatTime(msg.createdAt)}</small>
+  container.innerHTML = messages.map((msg) => {
+    const isSent = msg.senderId._id === currentUser.id;
+    return `
+      <div class="message ${isSent ? 'sent' : 'received'}">
+        <div>
+          <div class="message-bubble">
+            ${msg.content}
+          </div>
+          <div class="message-time">
+            ${new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </div>
+        </div>
       </div>
-    </div>
-  `
-    )
-    .join('');
+    `;
+  }).join('');
 
-  // Auto scroll to bottom
-  container.scrollTop = container.scrollHeight;
+  setTimeout(() => {
+    container.scrollTop = container.scrollHeight;
+  }, 100);
 }
 
 function setupMessageForm() {
@@ -112,35 +172,47 @@ function setupMessageForm() {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const content = document.getElementById('messageInput').value;
-    const messageType = document.getElementById('messageType').value;
+    const content = document.getElementById('messageInput').value.trim();
 
-    if (!content.trim()) {
+    if (!content) {
       showToast('Message cannot be empty', 'warning');
       return;
     }
 
+    if (!currentConversationUserId) {
+      showToast('Please select a contact first', 'warning');
+      return;
+    }
+
     try {
-      const data = await messageAPI.sendMessage(currentConversationUserId, content, messageType);
+      const token = localStorage.getItem('token');
+      
+      const response = await fetch('http://localhost:5000/api/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          receiverId: currentConversationUserId,
+          content: content
+        })
+      });
+
+      const data = await response.json();
 
       if (data.success) {
         document.getElementById('messageInput').value = '';
         loadConversation(currentConversationUserId);
+        showToast('Message sent!', 'success');
       } else {
-        showToast('Error sending message', 'error');
+        showToast(data.message || 'Failed to send message', 'error');
       }
     } catch (error) {
       console.error('Error sending message:', error);
-      showToast('Error sending message', 'error');
+      showToast('Failed to send message', 'error');
     }
   });
 }
-
-// Auto-refresh messages every 3 seconds
-setInterval(() => {
-  if (currentConversationUserId) {
-    loadConversation(currentConversationUserId);
-  }
-}, 3000);
 
 document.addEventListener('DOMContentLoaded', loadChat);

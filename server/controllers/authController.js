@@ -1,80 +1,89 @@
-const User = require("../models/User");
-const bcrypt = require("bcryptjs");
+﻿const User = require('../models/User');
+const jwt = require('jsonwebtoken');
 
-// REGISTER
+const generateToken = (id, role) => {
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE || '7d',
+  });
+};
+
 exports.register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-
     if (!name || !email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: "All fields required"
-      });
+      return res.status(400).json({ success: false, message: 'All fields required' });
     }
-
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({
-        success: false,
-        message: "User already exists"
-      });
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ success: false, message: 'Email already registered' });
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.create({
-      name,
-      email,
-      password: hashedPassword
-    });
-
+    user = await User.create({ name, email, password, role: 'user' });
+    const token = generateToken(user._id, user.role);
     res.status(201).json({
       success: true,
-      message: "User registered successfully",
-      user
+      token,
+      user: { id: user._id, name: user.name, email: user.email, role: user.role },
     });
-
   } catch (error) {
-    console.error("REGISTER ERROR:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error"
-    });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// LOGIN
+exports.registerAdmin = async (req, res) => {
+  try {
+    const { name, email, password, adminCode } = req.body;
+    if (adminCode !== process.env.ADMIN_CODE) {
+      return res.status(403).json({ success: false, message: 'Invalid admin code' });
+    }
+    if (!name || !email || !password) {
+      return res.status(400).json({ success: false, message: 'All fields required' });
+    }
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ success: false, message: 'Email already registered' });
+    }
+    user = await User.create({ name, email, password, role: 'admin' });
+    const token = generateToken(user._id, user.role);
+    res.status(201).json({
+      success: true,
+      token,
+      user: { id: user._id, name: user.name, email: user.email, role: user.role },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: 'Email and password required' });
+    }
+    const user = await User.findOne({ email }).select('+password');
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid password" });
+    const isPasswordCorrect = await user.comparePassword(password);
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
-
+    const token = generateToken(user._id, user.role);
     res.json({
       success: true,
-      message: "Login successful",
-      user
+      token,
+      user: { id: user._id, name: user.name, email: user.email, role: user.role },
     });
-
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// GET USER
 exports.getMe = async (req, res) => {
-  res.json({
-    success: true,
-    user: req.user
-  });
+  try {
+    const user = await User.findById(req.user.id);
+    res.json({ success: true, user });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
 };
