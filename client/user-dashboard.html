@@ -4,25 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Dashboard - EventHub</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/dashboard.css">
-  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/style.css?v=2">
+  <link rel="stylesheet" href="css/dashboard.css?v=2">
+  <link rel="stylesheet" href="css/responsive.css?v=2">
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="container">
+  <header>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container">
       <div class="navbar-brand">
         <h1>🎯 EventHub</h1>
       </div>
       <div class="navbar-menu">
         <a href="index.html" class="nav-link">Home</a>
-        <a href="user-dashboard.html" class="nav-link active">Dashboard</a>
+        <a href="#" class="nav-link active" onclick="(function(){var u=JSON.parse(localStorage.getItem('user')||'{}');window.location.href=u.role==='admin'?'admin-dashboard.html':'user-dashboard.html';return false;})(); return false;">Dashboard</a>
         <a href="chat.html" class="nav-link">Messages</a>
         <button id="logoutBtn" class="nav-link btn-danger">Logout</button>
       </div>
     </div>
   </nav>
+  </header>
 
   <!-- Dashboard Container -->
   <div class="dashboard-container">
@@ -154,9 +156,9 @@
   <!-- Toast Notification -->
   <div id="toast" class="toast"></div>
 
-  <script src="js/api.js"></script>
-  <script src="js/utils.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/dashboard.js"></script>
+  <script src="js/api.js?v=2"></script>
+  <script src="js/utils.js?v=2"></script>
+  <script src="js/auth.js?v=2"></script>
+  <script src="js/dashboard.js?v=2"></script>
 </body>
 </html>
