@@ -1,17 +1,19 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard - EventHub</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/dashboard.css">
-  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/style.css?v=2">
+  <link rel="stylesheet" href="css/dashboard.css?v=2">
+  <link rel="stylesheet" href="css/admin.css?v=2">
+  <link rel="stylesheet" href="css/responsive.css?v=2">
 </head>
 <body>
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="container">
+  <header>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container">
       <div class="navbar-brand">
         <h1>🎯 EventHub Admin</h1>
       </div>
@@ -23,25 +25,26 @@
       </div>
     </div>
   </nav>
+  </header>
 
   <!-- Dashboard Container -->
   <div class="dashboard-container">
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar admin-sidebar">
       <div class="user-profile">
         <div class="user-avatar">👨‍💼</div>
         <h3 id="adminName">Admin</h3>
         <p id="adminEmail">admin@eventhub.com</p>
         <p id="adminRole" style="font-size: 0.8rem; color: #ef4444;">Admin</p>
       </div>
-      <nav class="dashboard-nav">
-        <a href="admin-dashboard.html" class="nav-item active">
+      <nav class="dashboard-nav admin-nav">
+        <a href="#" class="nav-item admin-nav-item active" data-section="overview">
           <span>📊</span> Overview
         </a>
-        <a href="admin-dashboard.html" class="nav-item">
+        <a href="#" class="nav-item admin-nav-item" data-section="manage-events">
           <span>📅</span> Manage Events
         </a>
-        <a href="admin-dashboard.html" class="nav-item">
+        <a href="#" class="nav-item admin-nav-item" data-section="view-users">
           <span>👥</span> View Users
         </a>
         <a href="admin-messages.html" class="nav-item">
@@ -51,109 +54,153 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="dashboard-content">
-      <div class="section-header">
-        <h2>Welcome Admin! 👋</h2>
-      </div>
+    <main class="dashboard-content admin-content">
+      <section id="overview" class="admin-section active">
+        <div class="section-header">
+          <h2>Welcome Admin! 👋</h2>
+        </div>
 
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon">📅</div>
-          <h4>Total Events</h4>
-          <p id="totalEvents" class="stat-number">0</p>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">📅</div>
+            <h4>Total Events</h4>
+            <p id="totalEvents" class="stat-number">0</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <h4>Total Users</h4>
+            <p id="totalUsers" class="stat-number">0</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📝</div>
+            <h4>Total Registrations</h4>
+            <p id="totalRegistrations" class="stat-number">0</p>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💬</div>
+            <h4>New Messages</h4>
+            <p id="newMessages" class="stat-number">0</p>
+          </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon">👥</div>
-          <h4>Total Users</h4>
-          <p id="totalUsers" class="stat-number">0</p>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">📝</div>
-          <h4>Total Registrations</h4>
-          <p id="totalRegistrations" class="stat-number">0</p>
-        </div>
-        <div class="stat-card">
-          <div class="stat-icon">💬</div>
-          <h4>New Messages</h4>
-          <p id="newMessages" class="stat-number">0</p>
-        </div>
-      </div>
 
-      <div class="quick-actions">
-        <a href="admin-messages.html" class="btn-primary">
-          <span>💬</span> View Messages
-        </a>
-        <a href="create-event.html" class="btn-secondary">
-          <span>📝</span> Create Event
-        </a>
-      </div>
+        <div class="quick-actions">
+          <a href="admin-messages.html" class="btn-primary">
+            <span>💬</span> View Messages
+          </a>
+          <button class="btn-secondary" onclick="document.querySelector('[data-section=\'manage-events\']').click(); resetCreateForm(); document.getElementById('create').scrollIntoView({ behavior: 'smooth' });">
+            <span>📝</span> Create Event
+          </button>
+        </div>
+      </section>
+
+      <!-- Manage Events Section -->
+      <section id="manage-events" class="admin-section">
+        <div class="section-header">
+          <h2>Manage Events</h2>
+          <button class="btn-primary" onclick="resetCreateForm(); document.getElementById('create').scrollIntoView({ behavior: 'smooth' });">+ Create Event</button>
+        </div>
+        <div id="eventsList" class="admin-events-list"></div>
+        
+        <!-- Create / Edit Event Form inside Manage Events -->
+        <div id="create" style="margin-top: 3rem;">
+          <h3>Create / Edit Event</h3>
+          <form id="createEventForm" class="event-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Title</label>
+                <input type="text" id="eventTitle" required>
+              </div>
+              <div class="form-group">
+                <label>Category</label>
+                <select id="eventCategory" required>
+                  <option value="conference">Conference</option>
+                  <option value="workshop">Workshop</option>
+                  <option value="meetup">Meetup</option>
+                  <option value="hackathon">Hackathon</option>
+                  <option value="competition">Competition</option>
+                  <option value="webinar">Webinar</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="eventDate" required>
+              </div>
+              <div class="form-group">
+                <label>Time</label>
+                <input type="time" id="eventTime" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Location</label>
+                <input type="text" id="eventLocation" required>
+              </div>
+              <div class="form-group">
+                <label>Capacity</label>
+                <input type="number" id="capacity" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Participation Fee (0 for free)</label>
+                <input type="number" id="participationFee" required>
+              </div>
+              <div class="form-group">
+                <label>Prize Money (0 if none)</label>
+                <input type="number" id="prizeMoney" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Organizer Name</label>
+                <input type="text" id="organizerName" required>
+              </div>
+              <div class="form-group">
+                <label>Image URL</label>
+                <input type="url" id="eventImage" required>
+              </div>
+              <div class="form-group">
+                <label>Event Link</label>
+                <input type="url" id="eventLink" placeholder="https://...">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+              <label>Description</label>
+              <textarea id="eventDescription" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn-primary">Save Event</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- View Users Section -->
+      <section id="view-users" class="admin-section">
+        <div class="section-header">
+          <h2>View Users</h2>
+        </div>
+        <div id="usersList" class="admin-users-list"></div>
+      </section>
     </main>
   </div>
 
   <!-- Toast Notification -->
   <div id="toast" class="toast"></div>
 
-  <script src="js/api.js"></script>
-  <script src="js/utils.js"></script>
-  <script src="js/auth.js"></script>
+  <script src="js/api.js?v=2"></script>
+  <script src="js/utils.js?v=2"></script>
+  <script src="js/auth.js?v=2"></script>
+  <script src="js/admin.js?v=2"></script>
   <script>
-    // Check admin access
-    function checkAdminAccess() {
-      if (!requireAuth()) return false;
-      
+    document.addEventListener('DOMContentLoaded', () => {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
-      if (user.role !== 'admin') {
-        showToast('Admin access required', 'error');
-        setTimeout(() => window.location.href = 'index.html', 1500);
-        return false;
-      }
-      
-      return true;
-    }
-
-    // Load admin data
-    async function loadAdminDashboard() {
-      if (!checkAdminAccess()) return;
-
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
-      document.getElementById('adminName').textContent = user.name || 'Admin';
-      document.getElementById('adminEmail').textContent = user.email;
-
-      loadStats();
-    }
-
-    async function loadStats() {
-      try {
-        const token = localStorage.getItem('token');
-        
-        // Get events count
-        const eventsRes = await fetch('http://localhost:5000/api/events?page=1&limit=1', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const eventsData = await eventsRes.json();
-        document.getElementById('totalEvents').textContent = eventsData.total || 0;
-
-        // Get users count
-        const usersRes = await fetch('http://localhost:5000/api/users?page=1&limit=1', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const usersData = await usersRes.json();
-        document.getElementById('totalUsers').textContent = usersData.total || 0;
-
-        // Get messages count
-        const messagesRes = await fetch('http://localhost:5000/api/messages', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const messagesData = await messagesRes.json();
-        document.getElementById('newMessages').textContent = messagesData.unreadCount || 0;
-
-        document.getElementById('totalRegistrations').textContent = '0';
-      } catch (error) {
-        console.error('Error loading stats:', error);
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', loadAdminDashboard);
+      const adminNameEl = document.getElementById('adminName');
+      const adminEmailEl = document.getElementById('adminEmail');
+      if (adminNameEl) adminNameEl.textContent = user.name || 'Admin';
+      if (adminEmailEl) adminEmailEl.textContent = user.email || 'admin@eventhub.com';
+    });
   </script>
 </body>
 </html>
