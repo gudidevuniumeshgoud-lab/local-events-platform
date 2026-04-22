@@ -29,14 +29,21 @@ function displayEventDetails(event) {
 
   let actionButtons = '';
 
+  let eventLinkButton = '';
+  if (event.eventLink) {
+    eventLinkButton = `<a href="${event.eventLink}" target="_blank" class="btn-primary" style="background: linear-gradient(135deg, #10b981, #059669);">Visit Event Link</a>`;
+  }
+
   if (token && user.id) {
     actionButtons = `
       <button class="btn-primary" onclick="registerEvent('${event._id}')">Register for Event</button>
       <button class="btn-secondary" onclick="contactAdmin('${event._id}')">Contact Organizer</button>
+      ${eventLinkButton}
     `;
   } else {
     actionButtons = `
       <button class="btn-primary" onclick="redirectToLogin()">Login to Register</button>
+      ${eventLinkButton}
     `;
   }
 
@@ -70,6 +77,11 @@ function displayEventDetails(event) {
           <strong>👥 Participants</strong>
           ${event.registeredCount}/${event.capacity}
         </div>
+        ${event.eventLink ? `
+        <div class="event-info-item">
+          <strong>🔗 Event Link</strong>
+          <a href="${event.eventLink}" target="_blank" style="color: #10b981; word-break: break-all; text-decoration: none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">${event.eventLink}</a>
+        </div>` : ''}
       </div>
     </div>
 
@@ -93,7 +105,8 @@ async function registerEvent(eventId) {
     if (data.success) {
       showToast('Successfully registered for event!', 'success');
       setTimeout(() => {
-        window.location.href = 'user-dashboard.html';
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        window.location.href = user.role === 'admin' ? 'admin-dashboard.html' : 'user-dashboard.html';
       }, 1500);
     } else {
       showToast(data.message, 'error');
