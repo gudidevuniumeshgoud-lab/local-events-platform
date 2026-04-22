@@ -8,92 +8,86 @@
   .navbar-menu {
     gap: 1rem;
     flex-wrap: wrap;
+    justify-content: center;
   }
 
   .nav-link {
     font-size: 0.9rem;
   }
 
+  .hero {
+    padding: 4rem 1.5rem;
+  }
+
   .hero h2 {
-    font-size: 1.8rem;
+    font-size: 2.2rem;
   }
 
   .hero p {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 
   .search-bar {
     flex-direction: column;
+    background: transparent;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+    backdrop-filter: none;
   }
 
   .search-bar input,
-  .search-bar select {
+  .search-bar select,
+  .search-bar button {
     max-width: 100%;
+    width: 100%;
   }
 
   .events-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
   }
 
-  .dashboard-container {
-    grid-template-columns: 1fr;
-  }
-
-  .sidebar {
-    display: none;
-  }
-
-  .dashboard-nav {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  .nav-item {
-    border-left: none;
-    border-bottom: 2px solid transparent;
-    padding: 0.75rem 1rem;
-  }
-
-  .nav-item.active {
-    border-left: none;
-    border-bottom-color: var(--primary-color);
-  }
-
+  .dashboard-container,
   .admin-container {
     grid-template-columns: 1fr;
   }
 
+  .sidebar,
   .admin-sidebar {
-    display: none;
+    display: none; /* In a real app, we'd add a hamburger menu */
   }
 
+  .dashboard-nav,
   .admin-nav {
     display: flex;
     flex-direction: row;
     margin-bottom: 2rem;
-    border-bottom: 1px solid var(--border-color);
-    background-color: white;
+    border-bottom: 1px solid var(--surface-border);
+    overflow-x: auto;
+    background: var(--surface-color);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
   }
 
+  .nav-item,
   .admin-nav-item {
-    color: var(--text-dark);
     border-left: none;
-    border-bottom: 2px solid transparent;
+    border-bottom: 3px solid transparent;
     padding: 0.75rem 1rem;
+    white-space: nowrap;
   }
 
-  .admin-nav-item:hover,
+  .nav-item.active,
   .admin-nav-item.active {
-    background-color: var(--light-bg);
     border-left: none;
     border-bottom-color: var(--primary-color);
+    background: transparent;
   }
 
   .event-details-header {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
   .stats-grid {
@@ -112,90 +106,69 @@
 
   .chat-container {
     grid-template-columns: 1fr;
-    gap: 0;
+    height: calc(100vh - 160px);
   }
 
   .chat-sidebar {
     border-right: none;
-    border-bottom: 1px solid var(--border-color);
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 1rem;
-    padding: 1rem;
-  }
-
-  .chat-list {
-    display: flex;
-    gap: 1rem;
-    flex-direction: row;
-    overflow-x: auto;
-  }
-
-  .chat-item {
-    flex: 0 0 auto;
-    min-width: 150px;
+    border-bottom: 1px solid var(--surface-border);
+    display: none; /* Hide sidebar on mobile chat for now, typically handled with JS toggle */
   }
 }
 
 /* Mobile */
 @media (max-width: 480px) {
   .container {
-    padding: 0 10px;
+    padding: 0 15px;
   }
 
   .navbar-brand h1 {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
   }
 
   .navbar-menu {
-    gap: 0.5rem;
+    gap: 0.75rem;
   }
 
   .nav-link {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     padding: 0.5rem;
   }
 
   .hero {
-    padding: 2rem 1rem;
+    padding: 3rem 1rem;
   }
 
   .hero h2 {
-    font-size: 1.4rem;
+    font-size: 1.8rem;
   }
 
   .hero p {
-    font-size: 0.9rem;
-  }
-
-  .search-bar {
-    gap: 0.5rem;
+    font-size: 1rem;
   }
 
   .search-bar input,
   .search-bar select,
   .search-bar button {
-    font-size: 0.9rem;
-    padding: 0.5rem;
+    font-size: 1rem;
+    padding: 0.75rem;
   }
 
   .events-grid {
     grid-template-columns: 1fr;
-    gap: 1rem;
   }
 
-  .auth-container {
-    max-width: 100%;
-  }
-
-  .auth-form {
-    padding: 1.5rem;
+  .auth-form,
+  .event-form,
+  .profile-form,
+  .event-details-container {
+    padding: 2rem 1.5rem;
   }
 
   .event-list-item {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
+    gap: 1.5rem;
   }
 
   .event-list-actions {
@@ -215,6 +188,7 @@
   .admin-message-item {
     flex-direction: column;
     align-items: flex-start;
+    gap: 1rem;
   }
 
   .admin-actions {
@@ -223,14 +197,6 @@
 
   .admin-actions button {
     flex: 1;
-  }
-
-  .toast {
-    font-size: 0.9rem;
-  }
-
-  .form-group label {
-    font-size: 0.9rem;
   }
 
   .form-group input,
