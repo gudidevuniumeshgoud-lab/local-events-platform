@@ -1,7 +1,13 @@
-﻿async function loadDashboard() {
+async function loadDashboard() {
   if (!requireAuth()) return;
 
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+  // If admin lands on user dashboard, redirect them to admin dashboard
+  if (user.role === 'admin') {
+    window.location.href = 'admin-dashboard.html';
+    return;
+  }
 
   document.getElementById('userName').textContent = user.name || 'User';
   document.getElementById('userEmail').textContent = user.email;
