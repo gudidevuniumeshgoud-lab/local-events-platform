@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Event</title>
+</head>
+<body>
+
+<h2>Create Event</h2>
+
+<form id="eventForm">
+  <input type="text" id="title" placeholder="Title" required><br><br>
+  <input type="text" id="location" placeholder="Location" required><br><br>
+  <input type="date" id="date" required><br><br>
+  <input type="number" id="fee" placeholder="Fee"><br><br>
+  <input type="text" id="prize" placeholder="Prize"><br><br>
+
+  <button type="submit">Create Event</button>
+</form>
+
+<script>
+const API_URL = "http://localhost:5000/api";
+
+document.getElementById("eventForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${API_URL}/events`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      title: document.getElementById("title").value,
+      location: document.getElementById("location").value,
+      date: document.getElementById("date").value,
+      fee: document.getElementById("fee").value,
+      prize: document.getElementById("prize").value
+    })
+  });
+
+  const data = await res.json();
+
+  if (res.ok) {
+    alert("Event created!");
+    window.location.href = "admin-dashboard.html";
+  } else {
+    alert(data.message);
+  }
+});
+</script>
+
+</body>
+</html>
