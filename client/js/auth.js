@@ -9,6 +9,12 @@ function checkAuth() {
     if (authLinks) authLinks.style.display = 'none';
     if (userMenu) userMenu.style.display = 'flex';
 
+    // Set the Dashboard link based on the user's role
+    const dashboardLink = document.getElementById('dashboardLink');
+    if (dashboardLink) {
+      dashboardLink.href = user.role === 'admin' ? 'admin-dashboard.html' : 'user-dashboard.html';
+    }
+
     // Set logout button
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
