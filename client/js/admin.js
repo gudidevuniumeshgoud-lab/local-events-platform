@@ -79,10 +79,11 @@ function displayAdminEvents(events) {
       (event) => `
     <div class="admin-event-item">
       <div class="admin-event-item-info">
-        <h3>${event.title}</h3>
+        <h3>${event.title || 'Untitled'}</h3>
         <p><strong>Category:</strong> ${event.category}</p>
-        <p><strong>Date:</strong> ${formatDate(event.date)} at ${event.time}</p>
-        <p><strong>Location:</strong> ${event.location}</p>
+        <p><strong>📅</strong> ${event.date ? event.date.split('T')[0] : 'N/A'} at ${event.time || 'N/A'}</p>
+        <p><strong>📍</strong> ${event.location || 'N/A'}</p>
+        <p><strong>💰</strong> $${event.participationFee || 0}</p>
         <p><strong>Participants:</strong> ${event.registeredCount}/${event.capacity}</p>
       </div>
       <div class="admin-actions">
@@ -150,6 +151,7 @@ async function loadAdminMessages() {
 
 function displayAdminMessages(messages) {
   const container = document.getElementById('messagesList');
+  if (!container) return;
 
   if (messages.length === 0) {
     container.innerHTML = '<p class="loading">No messages</p>';
@@ -181,7 +183,7 @@ function displayAdminMessages(messages) {
 function setupCreateEventForm() {
   const form = document.getElementById('createEventForm');
 
-  form.addEventListener('submit', async (e) => {
+  form.onsubmit = async (e) => {
     e.preventDefault();
 
     const eventData = {
@@ -196,6 +198,7 @@ function setupCreateEventForm() {
       organizerName: document.getElementById('organizerName').value,
       capacity: parseInt(document.getElementById('capacity').value),
       image: document.getElementById('eventImage').value,
+      eventLink: document.getElementById('eventLink').value,
     };
 
     try {
@@ -213,7 +216,15 @@ function setupCreateEventForm() {
       console.error('Error creating event:', error);
       showToast('Error creating event', 'error');
     }
-  });
+  };
+}
+
+function resetCreateForm() {
+  const form = document.getElementById('createEventForm');
+  form.reset();
+  document.querySelector('#create h3').textContent = 'Create / Edit Event';
+  document.querySelector('#createEventForm button[type="submit"]').textContent = 'Save Event';
+  setupCreateEventForm();
 }
 
 async function editEvent(eventId) {
@@ -221,20 +232,23 @@ async function editEvent(eventId) {
 
   if (eventData.success) {
     const event = eventData.event;
-    document.getElementById('eventTitle').value = event.title;
-    document.getElementById('eventDescription').value = event.description;
-    document.getElementById('eventDate').value = event.date.split('T')[0];
-    document.getElementById('eventTime').value = event.time;
-    document.getElementById('eventLocation').value = event.location;
-    document.getElementById('eventCategory').value = event.category;
-    document.getElementById('participationFee').value = event.participationFee;
-    document.getElementById('prizeMoney').value = event.prizeMoney;
-    document.getElementById('organizerName').value = event.organizerName;
-    document.getElementById('capacity').value = event.capacity;
-    document.getElementById('eventImage').value = event.image;
+    document.getElementById('eventTitle').value = event.title || '';
+    document.getElementById('eventDescription').value = event.description || '';
+    document.getElementById('eventDate').value = event.date ? event.date.split('T')[0] : '';
+    document.getElementById('eventTime').value = event.time || '';
+    document.getElementById('eventLocation').value = event.location || '';
+    document.getElementById('eventCategory').value = event.category || 'other';
+    document.getElementById('participationFee').value = event.participationFee || 0;
+    document.getElementById('prizeMoney').value = event.prizeMoney || 0;
+    document.getElementById('organizerName').value = event.organizerName || '';
+    document.getElementById('capacity').value = event.capacity || 100;
+    document.getElementById('eventImage').value = event.image || '';
+    document.getElementById('eventLink').value = event.eventLink || '';
 
     // Scroll to form
     document.getElementById('create').scrollIntoView({ behavior: 'smooth' });
+    document.querySelector('#create h3').textContent = 'Edit Event: ' + event.title;
+    document.querySelector('#createEventForm button[type="submit"]').textContent = 'Update Event';
 
     // Change submit button behavior
     const form = document.getElementById('createEventForm');
@@ -253,6 +267,7 @@ async function editEvent(eventId) {
         organizerName: document.getElementById('organizerName').value,
         capacity: parseInt(document.getElementById('capacity').value),
         image: document.getElementById('eventImage').value,
+        eventLink: document.getElementById('eventLink').value,
       };
 
       try {
@@ -260,8 +275,7 @@ async function editEvent(eventId) {
 
         if (data.success) {
           showToast('Event updated successfully', 'success');
-          form.reset();
-          form.onsubmit = null;
+          resetCreateForm();
           loadAdminEvents();
           loadAdminStats();
         }
