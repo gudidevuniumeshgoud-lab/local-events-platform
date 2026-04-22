@@ -1,4 +1,4 @@
-﻿let currentConversationUserId = null;
+let currentConversationUserId = null;
 let currentUserRole = null;
 
 async function loadChat() {
@@ -100,7 +100,9 @@ function selectConversation(userId, userName, userEmail) {
   currentConversationUserId = userId;
   
   document.querySelectorAll('.chat-user').forEach(el => el.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  if (window.event && window.event.currentTarget) {
+    window.event.currentTarget.classList.add('active');
+  }
 
   document.getElementById('chatHeader').innerHTML = `
     <h3>💬 ${userName}</h3>
