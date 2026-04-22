@@ -1,4 +1,4 @@
-﻿const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'http://localhost:5000/api';
 
 // Helper function to get auth headers
 function getAuthHeaders() {
@@ -115,6 +115,13 @@ const registrationAPI = {
   cancelRegistration: async (eventId) => {
     const response = await fetch(`${API_BASE_URL}/registrations/${eventId}`, {
       method: 'DELETE',
+      headers: getAuthHeaders()
+    });
+    return await response.json();
+  },
+
+  getEventParticipants: async (eventId) => {
+    const response = await fetch(`${API_BASE_URL}/registrations/event/${eventId}/participants`, {
       headers: getAuthHeaders()
     });
     return await response.json();
