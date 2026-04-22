@@ -1,90 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Local Events Discovery Platform</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/style.css?v=2">
+  <link rel="stylesheet" href="css/responsive.css?v=2">
 </head>
+
 <body>
-  <!-- Navbar -->
-   <div class="navbar-menu">
-  <a href="index.html" class="nav-link active">Home</a>
-  <a href="#events" class="nav-link">Events</a>
-  <div class="auth-links" id="authLinks">
-    <a href="login.html" class="nav-link btn-primary">Login</a>
-    <a href="register.html" class="nav-link btn-secondary">Register</a>
-    <a href="admin-register.html" class="nav-link" style="color: #ef4444; font-weight: 600;">Admin</a>
-  </div>
-  <div class="user-menu" id="userMenu" style="display: none;">
-    <a href="user-dashboard.html" class="nav-link">Dashboard</a>
-    <a href="chat.html" class="nav-link">Messages</a>
-    <button id="logoutBtn" class="nav-link btn-danger">Logout</button>
-  </div>
-</div>
-  <nav class="navbar">
-    <div class="container">
-      <div class="navbar-brand">
-        <h1>🎯 EventHub</h1>
-      </div>
-      <div class="navbar-menu">
-        <a href="index.html" class="nav-link active">Home</a>
-        <a href="#events" class="nav-link">Events</a>
-        <div class="auth-links" id="authLinks">
-          <a href="login.html" class="nav-link btn-primary">Login</a>
-          <a href="register.html" class="nav-link btn-secondary">Register</a>
+  <header>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container">
+        <div class="navbar-brand">
+          <h1>🎯 EventHub</h1>
         </div>
-        <div class="user-menu" id="userMenu" style="display: none;">
-          <a href="user-dashboard.html" class="nav-link">Dashboard</a>
-          <a href="chat.html" class="nav-link">Messages</a>
-          <button id="logoutBtn" class="nav-link btn-danger">Logout</button>
+        <div class="navbar-menu">
+          <a href="index.html" class="nav-link active">Home</a>
+          <a href="#events" class="nav-link">Events</a>
+          <div class="auth-links" id="authLinks">
+            <a href="login.html" class="nav-link btn-primary">Login</a>
+            <a href="register.html" class="nav-link btn-secondary">Register</a>
+          </div>
+          <div class="user-menu" id="userMenu" style="display: none;">
+            <a href="#" id="dashboardLink" class="nav-link"
+              onclick="(function(){var u=JSON.parse(localStorage.getItem('user')||'{}');window.location.href=u.role==='admin'?'admin-dashboard.html':'user-dashboard.html';return false;})(); return false;">Dashboard</a>
+            <a href="chat.html" class="nav-link">Messages</a>
+            <button id="logoutBtn" class="nav-link btn-danger">Logout</button>
+          </div>
         </div>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </header>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <h2>Discover Amazing Local Events</h2>
-      <p>Connect, Learn, and Grow with Your Community</p>
-      <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search events by name...">
-        <select id="categoryFilter">
-          <option value="">All Categories</option>
-          <option value="hackathon">Hackathon</option>
-          <option value="workshop">Workshop</option>
-          <option value="competition">Competition</option>
-          <option value="conference">Conference</option>
-          <option value="meetup">Meetup</option>
-          <option value="webinar">Webinar</option>
-        </select>
-        <input type="text" id="locationFilter" placeholder="Filter by location...">
-        <button id="searchBtn" class="btn-primary">Search</button>
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <h2>Discover Amazing Local Events</h2>
+        <p>Connect, Learn, and Grow with Your Community</p>
+        <div class="search-bar">
+          <input type="text" id="searchInput" placeholder="Search events by name...">
+          <select id="categoryFilter">
+            <option value="">All Categories</option>
+            <option value="hackathon">Hackathon</option>
+            <option value="workshop">Workshop</option>
+            <option value="competition">Competition</option>
+            <option value="conference">Conference</option>
+            <option value="meetup">Meetup</option>
+            <option value="webinar">Webinar</option>
+          </select>
+          <input type="text" id="locationFilter" placeholder="Filter by location...">
+          <button id="searchBtn" class="btn-primary">Search</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Events Grid -->
+    <section class="events-section" id="events">
+      <div class="container">
+        <h2>Upcoming Events</h2>
+        <div class="events-grid" id="eventsGrid">
+          <div class="loading">Loading events...</div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="pagination"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>🎯 EventHub</h3>
+        <p>Discover amazing local events and connect with your community.</p>
+      </div>
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <a href="index.html">Home</a>
+        <a href="#events">Events</a>
+        <a href="login.html">Login</a>
+      </div>
+      <div class="footer-section">
+        <h3>Contact</h3>
+        <p>support@eventhub.com</p>
+        <p>+1 234 567 8900</p>
       </div>
     </div>
-  </section>
-
-  <!-- Events Grid -->
-  <section class="events-section" id="events">
-    <div class="container">
-      <h2>Upcoming Events</h2>
-      <div class="events-grid" id="eventsGrid">
-        <div class="loading">Loading events...</div>
-      </div>
-      
-      <!-- Pagination -->
-      <div class="pagination" id="pagination"></div>
+    <div class="footer-bottom">
+      &copy; 2026 EventHub. All rights reserved.
     </div>
-  </section>
+  </footer>
 
   <!-- Toast Notification -->
   <div id="toast" class="toast"></div>
 
-  <script src="js/api.js"></script>
-  <script src="js/utils.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/index.js"></script>
+  <script src="js/api.js?v=2"></script>
+  <script src="js/utils.js?v=2"></script>
+  <script src="js/auth.js?v=2"></script>
+  <script src="js/index.js?v=2"></script>
 </body>
+
 </html>
