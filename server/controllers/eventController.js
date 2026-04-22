@@ -1,4 +1,4 @@
-﻿const Event = require('../models/Event');
+const Event = require('../models/Event');
 
 exports.getAllEvents = async (req, res) => {
   try {
@@ -39,13 +39,13 @@ exports.getEventById = async (req, res) => {
 
 exports.createEvent = async (req, res) => {
   try {
-    const { title, description, date, time, location, category, participationFee, prizeMoney, organizerName, capacity, image } = req.body;
+    const { title, description, date, time, location, category, participationFee, prizeMoney, organizerName, capacity, image, eventLink } = req.body;
     if (!title || !description || !date || !time || !location || !category || !organizerName) {
       return res.status(400).json({ success: false, message: 'All required fields needed' });
     }
     const event = await Event.create({
       title, description, date, time, location, category, participationFee, prizeMoney,
-      organizerName, organizerId: req.user.id, capacity, image: image || 'https://via.placeholder.com/300x200',
+      organizerName, organizerId: req.user.id, capacity, image: image || 'https://via.placeholder.com/300x200', eventLink: eventLink || '',
     });
     res.status(201).json({ success: true, message: 'Event created', event });
   } catch (error) {
