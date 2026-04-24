@@ -1,4 +1,4 @@
-﻿require('dotenv').config();
+require('dotenv').config();
 require('express-async-errors');
 const express = require('express');
 const cors = require('cors');
@@ -14,7 +14,10 @@ const app = express();
 
 connectDB();
 
-app.use(cors());
+app.use(cors({
+  origin: "https://your-vercel-app.vercel.app",
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
