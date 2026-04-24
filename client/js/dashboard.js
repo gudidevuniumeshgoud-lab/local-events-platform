@@ -24,7 +24,7 @@ async function loadDashboard() {
 async function loadRegisteredEvents() {
   try {
     const token = localStorage.getItem('token');
-    const response = await fetch('https://local-events-platform.onrender.com/api/registrations', {
+    const response = await fetch(`${API_BASE_URL}/registrations`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -88,7 +88,7 @@ function displayRegisteredEvents(registrations) {
 async function loadMessages() {
   try {
     const token = localStorage.getItem('token');
-    const response = await fetch('https://local-events-platform.onrender.com/api/messages', {
+    const response = await fetch(`${API_BASE_URL}/messages`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -180,7 +180,7 @@ function setupProfileForm() {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('https://local-events-platform.onrender.com/api/users/profile/update', {
+      const response = await fetch(`${API_BASE_URL}/users/profile/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -214,7 +214,7 @@ function setupProfileForm() {
       if (confirm('Are you sure? This action cannot be undone.')) {
         try {
           const token = localStorage.getItem('token');
-          const response = await fetch('https://local-events-platform.onrender.com/api/users/account/delete', {
+          const response = await fetch(`${API_BASE_URL}/users/account/delete`, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
           });
@@ -245,7 +245,7 @@ async function cancelEventRegistration(eventId) {
   if (confirm('Cancel this registration?')) {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`https://local-events-platform.onrender.com/api/registrations/${eventId}`, {
+      const response = await fetch(`${API_BASE_URL}/registrations/${eventId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
