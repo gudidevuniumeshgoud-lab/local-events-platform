@@ -32,7 +32,7 @@ async function loadContactsList() {
     console.log('🔐 Token exists:', !!token);
     console.log('👤 User role:', user.role);
 
-    let url = 'http://localhost:5000/api/users?page=1&limit=100';
+    let url = 'https://local-events-platform.onrender.com/api/users?page=1&limit=100';
     
     if (user.role === 'admin') {
       console.log('👨‍💼 Admin user - fetching regular users');
@@ -118,7 +118,7 @@ async function loadConversation(userId) {
   try {
     const token = localStorage.getItem('token');
     
-    const response = await fetch(`http://localhost:5000/api/messages/conversation/${userId}`, {
+    const response = await fetch(`https://local-events-platform.onrender.com/api/messages/conversation/${userId}`, {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -189,7 +189,7 @@ function setupMessageForm() {
     try {
       const token = localStorage.getItem('token');
       
-      const response = await fetch('http://localhost:5000/api/messages', {
+      const response = await fetch('https://local-events-platform.onrender.com/api/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
