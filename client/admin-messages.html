@@ -360,7 +360,7 @@
     async function loadUsersList() {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('http://localhost:5000/api/users?page=1&limit=100&role=user', {
+        const response = await fetch(`${API_BASE_URL}/users?page=1&limit=100&role=user`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -404,7 +404,7 @@
     async function loadConversation(userId) {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`http://localhost:5000/api/messages/conversation/${userId}`, {
+        const response = await fetch(`${API_BASE_URL}/messages/conversation/${userId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -470,7 +470,7 @@
 
         try {
           const token = localStorage.getItem('token');
-          const response = await fetch('http://localhost:5000/api/messages', {
+          const response = await fetch(`${API_BASE_URL}/messages`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
