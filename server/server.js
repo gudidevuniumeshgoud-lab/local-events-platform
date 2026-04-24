@@ -14,12 +14,10 @@ const app = express();
 
 connectDB();
 
+const cors = require("cors");
+
 app.use(cors({
-  origin: [
-    "https://local-events-platform-v159-atjgp3xs.vercel.app",
-    "https://local-events-platf-git-1980fb-gudidevuniumeshgoud-labs-projects.vercel.app"
-  ],
-  credentials: true
+  origin: "*"
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
